@@ -2,18 +2,16 @@ let web3;
 let accounts = [];
 
 async function loadContract() {
-    const response = await fetch('../build/contracts/MissingPersonsSystem.json');
+    const response = await fetch('/contracts/MissingPersonsSystem.json');
     const data = await response.json();
-
     const abi = data.abi;
-
-    const address= await fetch('../src/contracts/contract-address.json');
-    const addressData = await address.json();
+  
+    const addressResponse = await fetch('/src-contracts/contract-address.json');
+    const addressData = await addressResponse.json();
     const contractAddress = addressData.MissingPersonsSystem.address;
-    // console.log("Contract Address:", contractAddress);
-
+  
     return new web3.eth.Contract(abi, contractAddress);
-}
+  }
 
 
 async function registerUser() {

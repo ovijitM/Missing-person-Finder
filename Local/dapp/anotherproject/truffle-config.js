@@ -146,7 +146,7 @@ module.exports = {
     development: {
       host: "host.docker.internal",  
       port: 8585,         
-      network_id: "5777",    
+      network_id: "*",    
       gas: 6721975,
     },
   },

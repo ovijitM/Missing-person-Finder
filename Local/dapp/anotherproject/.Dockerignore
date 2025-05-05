@@ -25,4 +25,4 @@ docker-compose.yml
 .idea
 *.swp
 
-src/contracts/contract-address.json
+
