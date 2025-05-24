@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Person DApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body onload="connectMetaMask()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-search-location me-2"></i> Missing Person DApp
+            </a>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <h2>Welcome to the Decentralized Missing Persons Management System</h2>
+            <p class="text-muted" id="walletAddress">Connecting to MetaMask...</p>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col">
+                <div class="card h-100 role-card admin-card" onclick="location.href='register.html'">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-shield fa-3x mb-3 text-dark"></i>
+                        <h5 class="card-title"> Register</h5>
+                        <p class="card-text">Create your account as Admin, Reporter, or Investigator.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 role-card reporter-card" onclick="location.href='reporter.html'">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-edit fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Reporter Panel</h5>
+                        <p class="card-text">Report a missing person and manage appointments.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 role-card admin-card" onclick="location.href='admin.html'">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tools fa-3x mb-3 text-dark"></i>
+                        <h5 class="card-title"> Admin Panel</h5>
+                        <p class="card-text">Update cases and assign investigators.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 role-card investigator-card" onclick="location.href='investigator.html'">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-tie fa-3x mb-3 text-info"></i>
+                        <h5 class="card-title"> Investigator Panel</h5>
+                        <p class="card-text">View and manage your investigation schedule.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 role-card reporter-card" onclick="location.href='public.html'">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title"> Public Access</h5>
+                        <p class="card-text">Search and view missing person details publicly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-light text-center py-4 mt-auto border-top">
+        <div class="container">
+            <small class="text-muted">© 2025 Missing Person DApp — CSE446 Project</small>
+        </div>
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        async function connectMetaMask() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletAddress').innerText = `Connected Wallet: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+                } catch (error) {
+                    console.error("Connection error:", error);
+                    document.getElementById('walletAddress').innerText = "Failed to connect to MetaMask";
+                }
+            } else {
+                alert("MetaMask not found!");
+                document.getElementById('walletAddress').innerText = "MetaMask not installed";
+            }
+        }
+    </script>
+</body>
+</html>

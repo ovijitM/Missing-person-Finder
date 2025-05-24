@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Missing Person DApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        nav button {
+            float: left;
+            color: white;
+            padding: 14px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        nav button:hover {
+            background-color: #575757;
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        hr {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Missing Person Reporting DApp</h2>
+
+    <button id="connectButton" onclick="connectMetaMask()">🔗 Connect MetaMask</button>
+    <p id="walletAddress"></p>
+
+    <nav>
+        <button onclick="showPanel('registration')">📝 User Registration</button>
+        <button onclick="showPanel('reporter')">📄 Reporter Panel</button>
+        <button onclick="showPanel('admin')">🛠️ Admin Panel</button>
+        <button onclick="showPanel('investigator')">🔍 Investigator Panel</button>
+        <button onclick="showPanel('anyone')">🏠 Anyone Can use </button>
+    </nav>
+
+    <hr>
+
+    <section id="registration">
+        <div>
+            <h3>User Registration Panel</h3>
+	            <ul>Register as Admin</ul>
+                <ul>Register as Reporter</ul>
+                <ul>Register as Investigator</ul>
+        </div>
+        <h3>User Registration</h3>
+
+        <label>Name:</label>
+        <input type="text" id="name"><br><br>
+
+        <label>Role (0 = Admin, 1 = Reporter, 2 = Investigator):</label>
+        <input type="number" id="role"><br><br>
+
+        <label>NID (10 digits):</label>
+        <input type="number" id="nid"><br><br>
+
+        <button onclick="registerUser()">Register</button>
+
+        <h4>Status</h4>
+        <p id="status"></p>
+    </section>
+
+    <section id="reporter">
+        <div>
+            <h3>Reporter Panel</h3>
+            <ul>Add Missing Person (auto-assign urgency based on age)</ul>
+            <ul>Book an Investigation Slot (with MetaMask payment)</ul>
+            <ul>Select Admin for Payment Transfer</ul>
+            <ul>View Available Booking Slots</ul>
+            <ul>View Appointment Schedule</ul>
+        </div>        
+    </section>
+
+    <section id="admin">
+        <div>
+            <h3>Admin Panel</h3>
+            <ul>Update Missing Person Status (with validation)</ul>
+            <ul>Assign Investigator to a Case</ul>
+            <ul>View Appointment Schedule</ul>
+        </div>
+    </section>
+
+    <section id="investigator">
+        <div>
+            <h3>Investigator Panel</h3>
+            <ul>View Own Appointment Schedule</ul>
+            <ul>Notify Admin if a Missing Person is Found (bonus feature)</ul>
+        </div>
+    </section>
+
+    <section id="anyone">
+        <div>
+            <h3>Anyone Can Panel</h3>
+            <ul>Search Missing Persons</ul>
+            <ul>View Area-wise Sorted Count of Missing Persons</ul>
+            <ul>View Appointment Schedule (read-only/public)</ul>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        function showPanel(panelId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        async function connectMetaMask() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletAddress').innerText = "Connected Wallet: " + accounts[0];
+                } catch (error) {
+                    console.error("Connection error:", error);
+                }
+            } else {
+                alert("MetaMask not found!");
+            }
+        }
+    </script>
+
+</body>
+</html>

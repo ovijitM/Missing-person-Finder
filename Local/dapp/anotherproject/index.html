@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Missing Person DApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        nav button {
+            float: left;
+            color: white;
+            padding: 14px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        nav button:hover {
+            background-color: #575757;
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        hr {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Missing Person Reporting DApp</h2>
+
+   
+    <p id="walletAddress"></p>
+
+    <nav>
+        <button onclick="showPanel('registration')">📝 User Registration</button>
+        <button onclick="showPanel('reporter')">📄 Reporter Panel</button>
+        <button onclick="showPanel('admin')">🛠️ Admin Panel</button>
+        <button onclick="showPanel('investigator')">🔍 Investigator Panel</button>
+        <button onclick="showPanel('anyone')">🏠 Anyone Can use </button>
+    </nav>
+
+    <hr>
+
+    <section id="registration">
+        <div>
+            <h3>User Registration Panel</h3>
+	            <ul>Register as Admin</ul>
+                <ul>Register as Reporter</ul>
+                <ul>Register as Investigator</ul>
+        </div>
+        <h3>User Registration</h3>
+
+        <label>Name:</label>
+        <input type="text" id="name"><br><br>
+
+        <label>Role (0 = Admin, 1 = Reporter, 2 = Investigator):</label>
+        <input type="number" id="role"><br><br>
+
+        <label>NID (10 digits):</label>
+        <input type="number" id="nid"><br><br>
+
+        <button onclick="registerUser()">Register</button>
+
+        <h4>Status</h4>
+        <p id="status"></p>
+    </section>
+
+    <section id="reporter">
+        <div>
+            <h3>Reporter Panel</h3>
+            <ul>Add Missing Person (auto-assign urgency based on age)</ul>
+            <div>
+                <h3>Report Missing Person</h3>
+
+                <label>Name:</label>
+                <input type="text" id="rp_name"><br><br>
+                
+                <label>Age:</label>
+                <input type="number" id="rp_age"><br><br>
+                
+                <label>Height (cm):</label>
+                <input type="number" id="rp_height"><br><br>
+                
+                <label>Description:</label>
+                <input type="text" id="rp_description"><br><br>
+                
+                <label>Last Seen Location:</label>
+                <input type="text" id="rp_location"><br><br>
+                
+                <label>Relative Contact Number:</label>
+                <input type="number" id="rp_contact"><br><br>
+                
+                <button onclick="reportMissingPerson()">Report Missing Person</button>
+                
+                <h4>Status</h4>
+                <p id="rp_status"></p>
+            </div>
+            
+            <ul>Book an Investigation Slot (with MetaMask payment)</ul>
+            <div>
+                <h3>Book Appointment</h3>
+
+                <label for="book_case_id">Case ID:</label>
+                <input type="number" id="book_case_id"><br><br>
+                
+                <label for="book_investigator_address">Investigator Address:</label>
+                <input type="text" id="book_investigator_address"><br><br>
+                
+                <label for="slot_index">Slot Index (0–59):</label>
+                <input type="number" id="slot_index" min="0" max="59"><br><br>
+                
+                <button onclick="bookAppointment()">Book Appointment</button>
+                
+                <h4>Booking Status</h4>
+                <p id="appointment_status"></p>
+            </div>
+            <ul>Select Admin for Payment Transfer</ul>
+            <ul>View Available Booking Slots</ul>
+            <div>
+                <h3>Check Investigator's Available Slots</h3>
+                <label for="investigatorAddress">Investigator Address:</label>
+                <input type="text" id="investigatorAddress" placeholder="0x..." />
+                <button onclick="fetchAvailableSlots()">Get Available Slots</button>
+                <ul id="availableSlotsList"></ul>
+            </div>
+            <ul>View Appointment Schedule</ul>
+            <div>
+                <h3>Investigator Schedule</h3>
+                <label for="investigatorAddress">Enter Investigator Address:</label>
+                <input type="text" id="investigatorAddress" placeholder="0x..." />
+                <button onclick="fetchInvestigatorSchedule()">Get Schedule</button>
+                <ul id="scheduleList"></ul>
+            </div>
+        </div>        
+    </section>
+
+    <section id="admin">
+        <div>
+            <h3>Admin Panel</h3>
+            <ul>Update Missing Person Status (with validation)</ul>
+            <div>
+                <h3>Update Person Status</h3>
+
+                <label>Enter Case ID:</label>
+                <input type="number" id="status_case_id"><br><br>
+                
+                <button onclick="updatePersonStatus()">Update Status to 'Found'</button>
+                
+                <h4>Status</h4>
+                <p id="update_status_result"></p>
+            </div>
+            <ul>Assign Investigator to a Case</ul>
+            <div>
+                <h3>Assign Investigator to a Case</h3>
+
+                <label>Enter Case ID:</label>
+                <input type="number" id="assign_case_id"><br><br>
+                
+                <label>Investigator Address:</label>
+                <input type="text" id="investigator_address"><br><br>
+                
+                <button onclick="assignInvestigator()">Assign Investigator</button>
+                
+                <h4>Status</h4>
+                <p id="assign_status_result"></p>
+            </div>
+            <ul>View Appointment Schedule</ul>
+        </div>
+    </section>
+
+    <section id="investigator">
+        <div>
+            <h3>Investigator Panel</h3>
+            <ul>View Own Appointment Schedule</ul>
+            <div>
+                <h3>My Formatted Schedule</h3>
+                <button onclick="fetchMyFormattedSchedule()">Show Schedule</button>
+                <ul id="formattedScheduleList"></ul>
+            </div>
+            <ul>Notify Admin if a Missing Person is Found (bonus feature)</ul>
+        </div>
+    </section>
+
+    <section id="anyone">
+        <div>
+            <h3>Anyone Can Panel</h3>
+            <ul>Search Missing Persons</ul>
+            <div>
+                <h3>View Case Details</h3>
+                <label for="view_case_id">Enter Case ID:</label>
+                <input type="number" id="view_case_id" />
+                <button onclick="getCaseDetails()">Get Details</button>
+                <h4>Case Info:</h4>
+                <pre id="case_details"></pre>
+            </div>
+            <ul>View Area-wise Sorted Count of Missing Persons</ul>
+            <div>
+                <h3>Missing Persons by Division</h3>
+                <label for="divisionId">Select Division:</label>
+                <select id="divisionId">
+                    <option value="0">Dhaka</option>
+                    <option value="1">Chittagong</option>
+                    <option value="2">Rajshahi</option>
+                    <option value="3">Khulna</option>
+                    <option value="4">Barisal</option>
+                    <option value="5">Sylhet</option>
+                    <option value="6">Rangpur</option>
+                    <option value="7">Mymensingh</option>
+                </select>
+                <br />
+                <button onclick="fetchMissingPersonsByDivision()">Get Missing Persons</button>
+                <ul id="missingPersonsList"></ul>
+            </div>
+            <ul>all devision missing by count</ul>
+            <div>
+                <h3>Division Wise Missing Persons Count</h3>
+                <button onclick="fetchAllDivisionWiseMissingCounts()">Get Missing Counts</button>
+                <ul id="divisionStatsList"></ul>
+            </div>
+            <ul>View Appointment Schedule (read-only/public)</ul>
+
+            <ul>get all case id</ul>
+            <div>
+                <h3>All Reported Case IDs</h3>
+                <button onclick="fetchAllCaseIds()">Load Case IDs</button>
+                <ul id="caseIdList"></ul>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        function showPanel(panelId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        async function connectMetaMask() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletAddress').innerText = "Connected Wallet: " + accounts[0];
+                } catch (error) {
+                    console.error("Connection error:", error);
+                }
+            } else {
+                alert("MetaMask not found!");
+            }
+        }
+    </script>
+
+</body>
+</html>

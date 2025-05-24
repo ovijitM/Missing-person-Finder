@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Person DApp - Reporter Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-search-location me-2"></i> Missing Person DApp
+            </a>
+            <div class="navbar-text">
+                <span id="walletAddress" class="me-3">Connecting to MetaMask...</span>
+                <!-- <a href="index.html" class="btn btn-light btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </a> -->
+            </div>
+        </div>
+    </nav>
+    <div class="container py-6">
+        <h2 class="text-center mb-5">Reporter Portal</h2>
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-3">
+                <div class="list-group mb-3" id="pageNav">
+                    <a href="index.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-home me-2"></i> Home
+                    </a>
+                    <a href="register.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-plus me-2"></i> Register
+                    </a>
+                    <a href="reporter.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-file-alt me-2"></i> Reporter
+                    </a>
+                    <a href="admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-shield me-2"></i> Admin
+                    </a>
+                    <a href="investigator.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-tie me-2"></i> Investigator
+                    </a>
+                    <a href="public.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users me-2"></i> Public
+                    </a>
+                </div>
+                <hr class="my-3">
+                <div class="list-group" id="reporterTabs">
+                    <button class="list-group-item list-group-item-action active" data-tab="new-report">
+                        <i class="fas fa-plus-circle me-2"></i> New Report
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="book-appointment">
+                        <i class="fas fa-calendar-alt me-2"></i> Book Appointment
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="available-slots">
+                        <i class="fas fa-list-ul me-2"></i> Available Slots
+                    </button>
+                    <button class="list-group-item list-group-item-action" data-tab="schedule">
+                        <i class="fas fa-calendar me-2"></i> Schedule
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="section-panel mt-5">
+                    <div id="new-report" class="tab-content content-card p-5">
+                        <h3 class="mb-4"><i class="fas fa-plus-circle me-2"></i> New Missing Person Report</h3>
+                        <form id="reportForm"> <!-- #dont know this might need for change  -->
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-user me-2"></i> Name</label>
+                                <input type="text" class="form-control" id="rp_name" placeholder="Enter name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-child me-2"></i> Age</label>
+                                <input type="number" class="form-control" id="rp_age" placeholder="Enter age" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-ruler-vertical me-2"></i> Height (cm)</label>
+                                <input type="number" class="form-control" id="rp_height" placeholder="Enter height" required>
+                            </div>
+                            <!-- <div class="mb-3">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="fas fa-image me-2"></i> Image</label>
+                                    <input type="file" class="form-control" id="rp_image" accept="image/*">
+                                </div>
+                            </div> -->
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-comment me-2"></i> Description</label>
+                                <input type="text" class="form-control" id="rp_description" placeholder="Enter description" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-map-marker-alt me-2"></i> Last Seen Location</label>
+                                <input type="text" class="form-control" id="rp_location" placeholder="Enter location" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-phone me-2"></i> Relative Contact Number</label>
+                                <input type="number" class="form-control" id="rp_contact" placeholder="Enter contact number" required>
+                            </div>
+                            <button type="button" class="btn btn-success w-100" onclick="reportMissingPerson()">
+                                <i class="fas fa-plus me-2"></i> Report Missing Person
+                            </button>
+                        </form>
+                        <p id="rp_status" class="mt-3 text-center"></p>
+                    </div>
+                    <div id="book-appointment" class="tab-content content-card p-5 d-none">
+                        <h3 class="mb-4"><i class="fas fa-calendar-alt me-2"></i> Book an Appointment</h3>
+                        <form id="bookForm">
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-file-alt me-2"></i> Case ID</label>
+                                <input type="number" class="form-control" id="book_case_id" placeholder="Enter case ID" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-user-tie me-2"></i> Investigator Address</label>
+                                <input type="text" class="form-control" id="book_investigator_address" placeholder="0x..." required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fas fa-clock me-2"></i> Slot Index (0–59)</label>
+                                <input type="number" class="form-control" id="slot_index" placeholder="Enter slot index" min="0" max="59" required>
+                            </div>
+                            <button type="button" class="btn btn-success w-100" onclick="bookAppointment()">
+                                <i class="fas fa-book me-2"></i> Book Appointment
+                            </button>
+                        </form>
+                        <p id="appointment_status" class="mt-3 text-center"></p>
+                    </div>
+
+
+
+
+                    <div id="available-slots" class="tab-content content-card p-5 d-none">
+                        <h3 class="mb-4"><i class="fas fa-list-ul me-2"></i> Investigator Available Slots</h3>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-user-tie me-2"></i> Investigator Address</label>
+                            <input type="text" class="form-control" id="investigatorAddress" placeholder="0x..." required>
+                        </div>
+                        <button class="btn btn-primary" onclick="fetchAvailableSlots()">
+                            <i class="fas fa-search me-2"></i> Get Available Slots
+                        </button>
+                        <ul id="availableSlotsList" class="list-group mt-3"></ul>
+                    </div>
+
+
+
+                    <div id="schedule" class="tab-content content-card p-5 d-none">
+                        <h3 class="mb-4"><i class="fas fa-calendar me-2"></i> Investigator Schedule</h3>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-user-tie me-2"></i> Investigator Address</label>
+                            <input type="text" class="form-control" id="investigatorAddress" placeholder="0x..." required>
+                        </div>
+                        <button class="btn btn-primary" onclick="fetchInvestigatorSchedule()">
+                            <i class="fas fa-calendar me-2"></i> Get Schedule
+                        </button>
+                        <ul id="scheduleList" class="list-group mt-3"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-light text-center py-4 mt-auto border-top">
+        <div class="container">
+            <small class="text-muted">© 2025 Missing Person DApp — CSE446 Project</small>
+        </div>
+    </footer>
+    <div class="modal fade" id="txModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Processing Transaction</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="spinner-border text-primary mb-3" role="status"></div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                    </div>
+                    <p id="txModalMessage" class="mt-3">Confirming transaction in your wallet...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+        function showPanel(panelId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        async function connectMetaMask() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletAddress').innerText = "Connected Wallet: " + accounts[0];
+                } catch (error) {
+                    console.error("Connection error:", error);
+                }
+            } else {
+                alert("MetaMask not found!");
+            }
+        }
+
+        window.onload = connectMetaMask;
+
+        // Tab switching logic
+        const tabs = document.querySelectorAll('#reporterTabs .list-group-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                tabContents.forEach(content => content.classList.add('d-none'));
+                document.getElementById(tab.dataset.tab).classList.remove('d-none');
+            });
+        });
+
+        const reportForm = document.getElementById('reportForm');
+        const bookForm = document.getElementById('bookForm');
+        const txModal = new bootstrap.Modal(document.getElementById('txModal'));
+
+        reportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (reportForm.checkValidity()) {
+                txModal.show();
+                reportMissingPerson();
+            }
+        });
+
+        bookForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (bookForm.checkValidity()) {
+                txModal.show();
+                bookAppointment();
+            }
+        });
+
+        const originalReportMissingPerson = reportMissingPerson;
+        reportMissingPerson = async () => {
+            try {
+                await originalReportMissingPerson();
+                txModal.hide();
+                document.getElementById('rp_status').innerText = "Report submitted successfully!";
+            } catch (error) {
+                txModal.hide();
+                document.getElementById('rp_status').innerText = "Error reporting missing person. See console.";
+            }
+        };
+
+        const originalBookAppointment = bookAppointment;
+        bookAppointment = async () => {
+            try {
+                await originalBookAppointment();
+                txModal.hide();
+                document.getElementById('appointment_status').innerText = "Appointment booked successfully!";
+            } catch (error) {
+                txModal.hide();
+                document.getElementById('appointment_status').innerText = "Error booking appointment. See console.";
+            }
+        };
+
+        const originalFetchAvailableSlots = fetchAvailableSlots;
+        fetchAvailableSlots = async () => {
+            try {
+                await originalFetchAvailableSlots();
+            } catch (error) {
+                console.error("Error fetching slots:", error);
+                document.getElementById('availableSlotsList').innerHTML = '<li class="list-group-item text-danger">Error fetching slots. See console.</li>';
+            }
+        };
+
+        const originalFetchInvestigatorSchedule = fetchInvestigatorSchedule;
+        fetchInvestigatorSchedule = async () => {
+            try {
+                await originalFetchInvestigatorSchedule();
+            } catch (error) {
+                console.error("Error fetching schedule:", error);
+                document.getElementById('scheduleList').innerHTML = '<li class="list-group-item text-danger">Error fetching schedule. See console.</li>';
+            }
+        };
+    </script>
+</body>
+</html>
