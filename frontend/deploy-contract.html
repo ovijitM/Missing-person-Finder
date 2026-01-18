@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deploy Missing Persons Contract</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #e2e8f0;
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        max-width: 600px;
+        width: 100%;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 12px;
+        padding: 40px;
+        backdrop-filter: blur(10px);
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .subtitle {
+        color: #94a3b8;
+        margin-bottom: 30px;
+        font-size: 0.9em;
+      }
+
+      .section {
+        margin-bottom: 30px;
+      }
+
+      .info-box {
+        background: rgba(6, 182, 212, 0.1);
+        border-left: 3px solid #06b6d4;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        color: #cffafe;
+        font-size: 0.9em;
+        line-height: 1.6;
+      }
+
+      .steps {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .step {
+        display: flex;
+        align-items: start;
+        margin-bottom: 15px;
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+      }
+
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 0.9em;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .step-content {
+        flex: 1;
+      }
+
+      .step-content p {
+        margin: 0;
+        font-size: 0.95em;
+        line-height: 1.5;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #cbd5e1;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 12px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 6px;
+        color: #e2e8f0;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .status {
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 20px;
+        display: none;
+        font-size: 0.9em;
+        line-height: 1.6;
+      }
+
+      .status.loading {
+        background: rgba(59, 130, 246, 0.1);
+        border-left: 3px solid #3b82f6;
+        color: #93c5fd;
+        display: block;
+      }
+
+      .status.success {
+        background: rgba(34, 197, 94, 0.1);
+        border-left: 3px solid #22c55e;
+        color: #bbf7d0;
+        display: block;
+      }
+
+      .status.error {
+        background: rgba(239, 68, 68, 0.1);
+        border-left: 3px solid #ef4444;
+        color: #fca5a5;
+        display: block;
+      }
+
+      .address-display {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px dashed rgba(99, 102, 241, 0.5);
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-family: "Courier New", monospace;
+        font-size: 0.85em;
+        word-break: break-all;
+        margin-top: 10px;
+        color: #22d3ee;
+      }
+
+      .copy-button {
+        padding: 6px 12px;
+        background: rgba(99, 102, 241, 0.2);
+        border: 1px solid rgba(99, 102, 241, 0.5);
+        color: #c7d2fe;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8em;
+        margin-top: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .copy-button:hover {
+        background: rgba(99, 102, 241, 0.3);
+      }
+
+      code {
+        background: rgba(15, 23, 42, 0.5);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #22d3ee;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Deploy Missing Persons Smart Contract</h1>
+      <p class="subtitle">Using Web3.js directly from browser</p>
+
+      <div class="info-box">
+        ℹ️ Make sure Ganache is running on
+        <code>http://localhost:8585</code> before deploying
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <p><strong>Start Ganache</strong></p>
+            <p style="color: #94a3b8; font-size: 0.9em; margin-top: 5px">
+              Open terminal: <code>npx ganache -p 8585 --deterministic</code>
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <p>
+              <strong>Connect MetaMask</strong> to Ganache network (Chain ID:
+              1337, RPC: http://localhost:8585)
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <p><strong>Deploy Contract</strong> using the button below</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <p><strong>Copy Address</strong> and open the main app</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <button id="connectBtn" class="btn-primary" onclick="connectMetaMask()">
+          🔗 Connect MetaMask First
+        </button>
+        <button
+          id="deployBtn"
+          class="btn-primary"
+          onclick="deployContract()"
+          style="display: none; margin-top: 10px"
+        >
+          🚀 Deploy Contract Now
+        </button>
+      </div>
+
+      <div id="status" class="status"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+      let userAccount = null;
+
+      async function connectMetaMask() {
+        const statusEl = document.getElementById("status");
+        const connectBtn = document.getElementById("connectBtn");
+        const deployBtn = document.getElementById("deployBtn");
+
+        try {
+          statusEl.className = "status loading";
+          statusEl.innerHTML = "⏳ Connecting to MetaMask...";
+
+          // Check MetaMask
+          if (!window.ethereum) {
+            throw new Error(
+              "❌ MetaMask not installed! Please install it from https://metamask.io",
+            );
+          }
+
+          // Request account access
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+
+          if (!accounts || accounts.length === 0) {
+            throw new Error("No accounts found. Please unlock MetaMask.");
+          }
+
+          userAccount = accounts[0];
+
+          // Check chain ID
+          const chainId = await window.ethereum.request({
+            method: "eth_chainId",
+          });
+
+          if (chainId !== "0x539") {
+            // 0x539 = 1337 in hex
+            statusEl.className = "status error";
+            statusEl.innerHTML = `
+              ❌ Wrong Network!<br><br>
+              Current Chain ID: ${parseInt(chainId, 16)}<br>
+              Expected: 1337 (Ganache)<br><br>
+              <strong>Please add Ganache network to MetaMask:</strong><br>
+              • Network Name: Ganache Local<br>
+              • RPC URL: http://localhost:8585<br>
+              • Chain ID: 1337<br>
+              • Currency: ETH<br><br>
+              Then refresh this page and try again.
+            `;
+            return;
+          }
+
+          // Success
+          statusEl.className = "status success";
+          statusEl.innerHTML = `
+            ✅ Connected to MetaMask!<br><br>
+            <strong>Account:</strong> ${userAccount.slice(0, 6)}...${userAccount.slice(-4)}<br>
+            <strong>Network:</strong> Ganache Local (Chain ID: 1337)<br><br>
+            Ready to deploy! Click "Deploy Contract Now" below.
+          `;
+
+          connectBtn.style.display = "none";
+          deployBtn.style.display = "block";
+          deployBtn.focus();
+        } catch (error) {
+          statusEl.className = "status error";
+          statusEl.innerHTML = `
+            ❌ Connection Failed<br><br>
+            <strong>Error:</strong> ${error.message}<br><br>
+            <strong>Troubleshooting:</strong><br>
+            • Is MetaMask installed?<br>
+            • Is MetaMask unlocked?<br>
+            • Have you added Ganache network (Chain ID 1337)?<br>
+            • Is Ganache running on port 8585?
+          `;
+        }
+      }
+
+      async function deployContract() {
+        const statusEl = document.getElementById("status");
+        const deployBtn = document.getElementById("deployBtn");
+
+        try {
+          if (!userAccount) {
+            throw new Error("Please connect MetaMask first!");
+          }
+
+          deployBtn.disabled = true;
+          statusEl.className = "status loading";
+          statusEl.innerHTML = "⏳ Preparing deployment...";
+
+          // Initialize Web3
+          const web3 = new Web3(window.ethereum);
+
+          statusEl.innerHTML +=
+            "<br>✓ Web3 initialized<br>⏳ Loading contract...";
+
+          // Fetch compiled contract from build directory
+          const response = await fetch(
+            "../build/contracts/MissingPersonsSystem.json",
+          );
+          if (!response.ok) {
+            throw new Error(
+              "Could not load contract artifact. Make sure to compile first: npx truffle compile",
+            );
+          }
+
+          const contractData = await response.json();
+          const Contract = new web3.eth.Contract(contractData.abi);
+
+          statusEl.innerHTML +=
+            "<br>✓ Contract ABI loaded<br>⏳ Deploying contract...";
+
+          // Deploy
+          const deployed = await Contract.deploy({
+            data: contractData.bytecode,
+            arguments: [],
+          }).send({
+            from: userAccount,
+            gas: 5000000,
+            gasPrice: web3.utils.toWei("2", "gwei"),
+            gasLimit: 5000000,
+          });
+
+          const contractAddress = deployed.options.address;
+
+          // Update config
+          statusEl.className = "status success";
+          statusEl.innerHTML = `
+                    ✅ Contract Deployed Successfully!<br><br>
+                    <strong>Contract Address:</strong><br>
+                    <div class="address-display" id="addressDisplay">${contractAddress}</div>
+                    <button class="copy-button" onclick="copyAddress()">📋 Copy Address</button><br><br>
+                    <strong>Next Steps:</strong><br>
+                    1. Copy the address above<br>
+                    2. Open <code>frontend/config.js</code><br>
+                    3. Replace CONTRACT_ADDRESS with the copied address<br>
+                    4. Open <code>frontend/index.html</code> and connect MetaMask
+                `;
+
+          deployBtn.disabled = false;
+        } catch (error) {
+          statusEl.className = "status error";
+          statusEl.innerHTML = `
+                    ❌ Deployment Failed<br><br>
+                    <strong>Error:</strong> ${error.message}<br><br>
+                    <strong>Troubleshooting:</strong><br>
+                    • Is Ganache running on port 8585?<br>
+                    • Is MetaMask connected to Ganache?<br>
+                    • Is the contract compiled? Run: npx truffle compile<br>
+                    • Check browser console (F12) for more details
+                `;
+          deployBtn.disabled = false;
+          console.error("Deployment error:", error);
+        }
+      }
+
+      function copyAddress() {
+        const addressEl = document.getElementById("addressDisplay");
+        const address = addressEl.textContent;
+        navigator.clipboard.writeText(address).then(() => {
+          const btn = event.target;
+          const original = btn.textContent;
+          btn.textContent = "✓ Copied!";
+          setTimeout(() => {
+            btn.textContent = original;
+          }, 2000);
+        });
+      }
+    </script>
+  </body>
+</html>

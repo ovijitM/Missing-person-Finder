@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Missing Persons System - Setup Guide</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #e2e8f0;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 40px auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 2.5em;
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .setup-section {
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 25px;
+        backdrop-filter: blur(10px);
+      }
+
+      .setup-section h2 {
+        color: #60a5fa;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        border-radius: 50%;
+        font-weight: bold;
+      }
+
+      .command-box {
+        background: rgba(15, 23, 42, 0.6);
+        border-left: 3px solid #06b6d4;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 6px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        color: #22d3ee;
+        overflow-x: auto;
+      }
+
+      .info-box {
+        background: rgba(6, 182, 212, 0.1);
+        border-left: 3px solid #06b6d4;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 6px;
+        color: #cffafe;
+      }
+
+      .success-box {
+        background: rgba(34, 197, 94, 0.1);
+        border-left: 3px solid #22c55e;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 6px;
+        color: #bbf7d0;
+      }
+
+      .warning-box {
+        background: rgba(239, 68, 68, 0.1);
+        border-left: 3px solid #ef4444;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 6px;
+        color: #fca5a5;
+      }
+
+      ul,
+      ol {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+      }
+
+      code {
+        background: rgba(15, 23, 42, 0.5);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #22d3ee;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse 2s infinite;
+      }
+
+      .status-running {
+        background: #22c55e;
+      }
+
+      .status-waiting {
+        background: #eab308;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .status-text {
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Missing Persons DApp Setup</h1>
+
+      <div class="setup-section">
+        <h2><span class="step-number">1</span> Start Ganache Blockchain</h2>
+        <p>Open a new terminal/PowerShell window and run:</p>
+        <div class="command-box">npx ganache -p 8585 --deterministic</div>
+        <div class="info-box">
+          ℹ️ This will start a local blockchain on port 8585 with 10 pre-funded
+          accounts. Keep this terminal running!
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">2</span> Compile Smart Contract</h2>
+        <p>In another terminal, navigate to the project and compile:</p>
+        <div class="command-box">
+          cd e:\Blockchain\Missing-person-Finder<br />
+          npx truffle compile
+        </div>
+        <div class="success-box">
+          ✓ Contract should compile successfully with solc 0.8.19
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">3</span> Deploy Smart Contract</h2>
+        <p>Still in the same terminal, deploy the contract:</p>
+        <div class="command-box">npx truffle migrate --reset</div>
+        <div class="info-box">
+          ℹ️ Truffle will connect to Ganache on port 8585 and deploy
+          MissingPersonsSystem contract
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">4</span> Note the Contract Address</h2>
+        <p>After deployment, you'll see output like:</p>
+        <div class="command-box">
+          .......<br />
+          > Migrations: 0x...<br />
+          <strong
+            >> MissingPersonsSystem: 0x1234....... ← COPY THIS ADDRESS</strong
+          >
+        </div>
+        <div class="warning-box">
+          ⚠️ Copy the contract address (it starts with 0x)
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">5</span> Update Config File</h2>
+        <p>Open <code>frontend/config.js</code> and replace:</p>
+        <div class="command-box">
+          const CONTRACT_ADDRESS = "0x5FbDB2315678afccb333f8a2c45a7d5cccb1b5c7";
+        </div>
+        <p>With the address from step 4 (the MissingPersonsSystem address)</p>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">6</span> Setup MetaMask</h2>
+        <ol>
+          <li>Install <strong>MetaMask</strong> browser extension</li>
+          <li>Click MetaMask icon → Settings → Networks → Add Network</li>
+          <li>
+            Fill in:
+            <ul>
+              <li><strong>Network name:</strong> Ganache Local</li>
+              <li><strong>RPC URL:</strong> http://localhost:8585</li>
+              <li><strong>Chain ID:</strong> 1337</li>
+              <li><strong>Currency symbol:</strong> ETH</li>
+            </ul>
+          </li>
+          <li>Click "Save"</li>
+        </ol>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">7</span> Import Ganache Accounts</h2>
+        <ol>
+          <li>In MetaMask, click "Import Account"</li>
+          <li>
+            Paste one of the <strong>Private Keys</strong> from the Ganache
+            terminal output
+          </li>
+          <li>Repeat for multiple accounts (to test different roles)</li>
+        </ol>
+        <div class="info-box">
+          ℹ️ The first account (0) will be the default deployer with Admin role
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">8</span> Open the Application</h2>
+        <p>Open <code>frontend/index.html</code> in your browser:</p>
+        <div class="command-box">
+          file:///e:/Blockchain/Missing-person-Finder/frontend/index.html
+        </div>
+        <div class="success-box">
+          ✓ You should see the Missing Persons DApp with a "Connect MetaMask"
+          button
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2><span class="step-number">9</span> Connect & Test</h2>
+        <ol>
+          <li>Click "Connect MetaMask" button</li>
+          <li>Select the account to connect (preferably account 0)</li>
+          <li>The app will auto-detect your role from the smart contract</li>
+          <li>Tabs will show/hide based on your role</li>
+        </ol>
+        <div class="info-box">
+          ℹ️ First time users need to register to get a role. Click the
+          "Register" tab to sign up.
+        </div>
+      </div>
+
+      <div class="setup-section">
+        <h2>Testing Scenarios</h2>
+        <div class="info-box">
+          <strong>Scenario 1: Register as Reporter</strong>
+          <ol>
+            <li>Connect with any account</li>
+            <li>Go to "Register" tab</li>
+            <li>Fill form with your name, NID, division, role 1 (Reporter)</li>
+            <li>Click "Register"</li>
+            <li>Refresh page - now you see Reporter tabs</li>
+          </ol>
+        </div>
+        <div class="info-box">
+          <strong>Scenario 2: Create Multiple Accounts</strong>
+          <ol>
+            <li>Import different Ganache private keys into MetaMask</li>
+            <li>Switch accounts and register with different roles</li>
+            <li>Test role-based access control</li>
+          </ol>
+        </div>
+        <div class="info-box">
+          <strong>Scenario 3: Report Missing Person & Book Appointment</strong>
+          <ol>
+            <li>As Reporter: Report a missing person</li>
+            <li>Switch to Investigator account</li>
+            <li>Book appointment to investigate</li>
+            <li>Switch back to Reporter to confirm</li>
+          </ol>
+        </div>
+      </div>
+
+      <div
+        class="setup-section"
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(16, 185, 129, 0.1),
+            rgba(6, 182, 212, 0.1)
+          );
+        "
+      >
+        <h2 style="color: #10b981">✅ All Set!</h2>
+        <p style="font-size: 1.1em; line-height: 1.8">
+          Your Missing Persons DApp is now fully functional with:
+        </p>
+        <ul style="font-size: 1.05em">
+          <li>
+            ✓ Local blockchain (Ganache) running with 10 pre-funded accounts
+          </li>
+          <li>✓ Smart contract deployed with all features enabled</li>
+          <li>✓ Professional frontend with dark theme & animations</li>
+          <li>✓ Role-based access control (Admin, Reporter, Investigator)</li>
+          <li>✓ Full Web3/MetaMask integration</li>
+          <li>✓ Form validation and error handling</li>
+        </ul>
+      </div>
+
+      <div class="setup-section">
+        <h2>Troubleshooting</h2>
+        <div class="warning-box">
+          <strong>Problem:</strong> "Could not connect to node at
+          http://127.0.0.1:8585"<br />
+          <strong>Solution:</strong> Make sure Ganache is running in a separate
+          terminal (Step 1)
+        </div>
+        <div class="warning-box">
+          <strong>Problem:</strong> MetaMask shows "Unrecognized Chain"<br />
+          <strong>Solution:</strong> Make sure you added the network with Chain
+          ID 1337 (Step 6)
+        </div>
+        <div class="warning-box">
+          <strong>Problem:</strong> "Please connect MetaMask first" message<br />
+          <strong>Solution:</strong> Click the "Connect MetaMask" button and
+          approve the connection
+        </div>
+        <div class="warning-box">
+          <strong>Problem:</strong> Functions not working after contract
+          update<br />
+          <strong>Solution:</strong> Update CONTRACT_ADDRESS in config.js with
+          the new deployed address
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
