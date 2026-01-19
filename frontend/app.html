@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Missing Person Finder - Blockchain DApp</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header/Navigation -->
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <h1>🔍 Missing Person Finder</h1>
+            <p>Blockchain-Powered Missing Persons Registry</p>
+          </div>
+          <div class="wallet-section">
+            <button id="connectBtn" class="btn btn-primary">
+              Connect MetaMask
+            </button>
+            <div id="walletInfo" class="wallet-info" style="display: none">
+              <div class="wallet-info-content">
+                <span id="walletAddress"></span>
+                <span id="walletRole" class="wallet-role"></span>
+              </div>
+              <button id="disconnectBtn" class="btn btn-small">
+                Disconnect
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="register">📝 Register</button>
+        <button class="tab-btn" data-tab="reporter">📄 Report Missing</button>
+        <button class="tab-btn" data-tab="search">🔍 Search Cases</button>
+        <button class="tab-btn" data-tab="investigator">🔎 Investigator</button>
+        <button class="tab-btn" data-tab="admin">⚙️ Admin</button>
+        <button class="tab-btn" data-tab="stats">📊 Statistics</button>
+      </nav>
+
+      <!-- Alert Messages -->
+      <div id="alertContainer"></div>
+
+      <!-- REGISTER TAB -->
+      <section id="register" class="tab-content active">
+        <div class="card">
+          <h2>👤 User Registration</h2>
+          <p class="text-muted">Register as Admin, Reporter, or Investigator</p>
+
+          <form id="registerForm" class="form">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                id="regName"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Role</label>
+              <select id="regRole" required>
+                <option value="">-- Select Role --</option>
+                <option value="0">Admin</option>
+                <option value="1">Reporter</option>
+                <option value="2">Investigator</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>National ID (10 digits)</label>
+              <input
+                type="text"
+                id="regNID"
+                placeholder="1234567890"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                required
+              />
+              <small class="text-muted">Must be exactly 10 digits</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Register
+            </button>
+          </form>
+
+          <div id="registerStatus" class="status-message"></div>
+        </div>
+      </section>
+
+      <!-- REPORTER TAB -->
+      <section id="reporter" class="tab-content">
+        <div class="grid-2">
+          <!-- Report Missing Person -->
+          <div class="card">
+            <h2>📋 Report Missing Person</h2>
+            <p class="text-muted">Create a new case report</p>
+
+            <form id="reportForm" class="form">
+              <div class="form-group">
+                <label>Person's Name</label>
+                <input
+                  type="text"
+                  id="rpName"
+                  placeholder="Full name"
+                  required
+                />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Age</label>
+                  <input type="number" id="rpAge" min="1" max="120" required />
+                </div>
+                <div class="form-group">
+                  <label>Height (cm)</label>
+                  <input
+                    type="number"
+                    id="rpHeight"
+                    min="50"
+                    max="250"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Description</label>
+                <textarea
+                  id="rpDescription"
+                  placeholder="Physical description, clothing, etc."
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Last Seen Location</label>
+                <select id="rpLocation" required>
+                  <option value="">-- Select Division --</option>
+                  <option value="Dhaka">Dhaka</option>
+                  <option value="Chittagong">Chittagong</option>
+                  <option value="Khulna">Khulna</option>
+                  <option value="Barisal">Barisal</option>
+                  <option value="Sylhet">Sylhet</option>
+                  <option value="Rajshahi">Rajshahi</option>
+                  <option value="Rangpur">Rangpur</option>
+                  <option value="Mymensingh">Mymensingh</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Relative Contact Number</label>
+                <input
+                  type="tel"
+                  id="rpContact"
+                  placeholder="Phone number"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                Report Case
+              </button>
+            </form>
+
+            <div id="reportStatus" class="status-message"></div>
+          </div>
+
+          <!-- Book Appointment -->
+          <div class="card">
+            <h2>📅 Book Investigation Appointment</h2>
+            <p class="text-muted">Schedule and pay for investigation</p>
+
+            <form id="bookForm" class="form">
+              <div class="form-group">
+                <label>Case ID</label>
+                <input
+                  type="number"
+                  id="bookCaseId"
+                  min="10000"
+                  placeholder="Enter case ID"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Investigator Address</label>
+                <input
+                  type="text"
+                  id="bookInvestigator"
+                  placeholder="0x..."
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Time Slot (0-59)</label>
+                <input
+                  type="number"
+                  id="bookSlot"
+                  min="0"
+                  max="59"
+                  placeholder="0-59"
+                  required
+                />
+                <small class="text-muted">Each slot is 10 minutes</small>
+              </div>
+
+              <div class="form-group">
+                <label>Payment Amount</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="bookAmount"
+                    min="0.01"
+                    step="0.01"
+                    value="0.01"
+                    required
+                  />
+                  <span class="input-unit">ETH</span>
+                </div>
+                <small class="text-muted">Minimum 0.01 ETH</small>
+              </div>
+
+              <button type="submit" class="btn btn-success btn-block">
+                Book Appointment
+              </button>
+            </form>
+
+            <div id="bookStatus" class="status-message"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEARCH TAB -->
+      <section id="search" class="tab-content">
+        <div class="grid-2">
+          <!-- Search By Case ID -->
+          <div class="card">
+            <h2>🔍 Case Details</h2>
+            <p class="text-muted">View details of a specific case</p>
+
+            <form id="searchForm" class="form">
+              <div class="form-group">
+                <label>Case ID</label>
+                <input
+                  type="number"
+                  id="searchCaseId"
+                  min="10000"
+                  placeholder="Enter case ID"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">
+                View Details
+              </button>
+            </form>
+
+            <div id="caseDetails" class="case-details"></div>
+          </div>
+
+          <!-- Division Statistics -->
+          <div class="card">
+            <h2>📊 Missing by Division</h2>
+            <p class="text-muted">View cases by location</p>
+
+            <form id="divisionForm" class="form">
+              <div class="form-group">
+                <label>Select Division</label>
+                <select id="divisionSelect" required>
+                  <option value="">-- Select Division --</option>
+                  <option value="0">Dhaka</option>
+                  <option value="1">Chittagong</option>
+                  <option value="2">Khulna</option>
+                  <option value="3">Barisal</option>
+                  <option value="4">Sylhet</option>
+                  <option value="5">Rajshahi</option>
+                  <option value="6">Rangpur</option>
+                  <option value="7">Mymensingh</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">
+                View Missing Cases
+              </button>
+            </form>
+
+            <div id="divisionResults" class="results-list"></div>
+          </div>
+        </div>
+
+        <!-- All Cases -->
+        <div class="card mt-20">
+          <h2>📋 All Reported Cases</h2>
+          <p class="text-muted">List of all cases in the system</p>
+          <button id="loadAllCasesBtn" class="btn btn-primary">
+            Load All Cases
+          </button>
+          <div id="allCasesList" class="results-list"></div>
+        </div>
+      </section>
+
+      <!-- INVESTIGATOR TAB -->
+      <section id="investigator" class="tab-content">
+        <div class="card">
+          <h2>🔎 My Schedule</h2>
+          <p class="text-muted">View your assigned appointments</p>
+
+          <button id="loadScheduleBtn" class="btn btn-primary">
+            Load My Schedule
+          </button>
+          <div id="mySchedule" class="schedule-list"></div>
+        </div>
+
+        <div class="card mt-20">
+          <h2>📅 Available Slots</h2>
+          <p class="text-muted">Check which time slots are available</p>
+
+          <form id="slotsForm" class="form">
+            <div class="form-group">
+              <label>Investigator Address</label>
+              <input
+                type="text"
+                id="slotsInvestigator"
+                placeholder="0x..."
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+              View Available Slots
+            </button>
+          </form>
+
+          <div id="availableSlots" class="slots-grid"></div>
+        </div>
+      </section>
+
+      <!-- ADMIN TAB -->
+      <section id="admin" class="tab-content">
+        <div class="grid-2">
+          <!-- Update Status -->
+          <div class="card">
+            <h2>✅ Update Case Status</h2>
+            <p class="text-muted">Mark case as Found (Admin only)</p>
+
+            <form id="updateStatusForm" class="form">
+              <div class="form-group">
+                <label>Case ID</label>
+                <input
+                  type="number"
+                  id="updateCaseId"
+                  min="10000"
+                  placeholder="Enter case ID"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-warning btn-block">
+                Mark as Found
+              </button>
+            </form>
+
+            <div id="updateStatus" class="status-message"></div>
+          </div>
+
+          <!-- Assign Investigator -->
+          <div class="card">
+            <h2>👤 Assign Investigator</h2>
+            <p class="text-muted">Assign investigator to case (Admin only)</p>
+
+            <form id="assignForm" class="form">
+              <div class="form-group">
+                <label>Case ID</label>
+                <input
+                  type="number"
+                  id="assignCaseId"
+                  min="10000"
+                  placeholder="Enter case ID"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Investigator Address</label>
+                <input
+                  type="text"
+                  id="assignInvestigator"
+                  placeholder="0x..."
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn btn-warning btn-block">
+                Assign Investigator
+              </button>
+            </form>
+
+            <div id="assignStatus" class="status-message"></div>
+          </div>
+        </div>
+
+        <!-- Withdraw Funds -->
+        <div class="card mt-20">
+          <h2>💰 Withdraw Funds</h2>
+          <p class="text-muted">Withdraw accumulated fees (Admin only)</p>
+
+          <button id="withdrawBtn" class="btn btn-danger">
+            Withdraw All Funds
+          </button>
+          <div id="withdrawStatus" class="status-message"></div>
+        </div>
+      </section>
+
+      <!-- STATS TAB -->
+      <section id="stats" class="tab-content">
+        <div class="card">
+          <h2>📊 Division-wise Statistics</h2>
+          <p class="text-muted">Missing persons count by division</p>
+
+          <button id="loadStatsBtn" class="btn btn-primary">
+            Load Statistics
+          </button>
+          <div id="statsResults" class="stats-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        Missing Person Finder © 2025 | Powered by Blockchain & Smart Contracts
+      </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
