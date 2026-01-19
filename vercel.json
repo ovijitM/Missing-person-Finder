@@ -1,4 +1,5 @@
 {
-  "buildCommand": "mkdir -p .vercel/output/static && cp -r frontend/* .vercel/output/static/",
-  "outputDirectory": ".vercel/output/static"
+  "buildCommand": "npm run build || true",
+  "outputDirectory": "frontend",
+  "public": "frontend"
 }
